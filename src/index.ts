@@ -3,6 +3,7 @@ import * as Discord from 'discord.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { logger } from './helpers/logger';
+import { despairService } from './services/DespairService';
 import { CustomClient, CustomMessage } from './types';
 
 dotenv.config();
@@ -31,11 +32,12 @@ client.commands = new Discord.Collection();
 })();
 
 client.once('ready', () => {
-  logger.info('===== Your Cool Bot ready =====');
+  logger.info('===== Despair Bot ready =====');
   logger.info(`Logged in as '${client.user?.tag}' (${client.user?.id})`);
 });
 
 client.on('message', async (message: CustomMessage) => {
+  despairService.countAndIncrementDespair(message);
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return null;
   }

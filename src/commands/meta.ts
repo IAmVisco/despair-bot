@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as moment from 'moment-timezone';
 import { MessageEmbed } from 'discord.js';
+import { despairService } from '../services/DespairService';
 import { Command } from '../types';
 
 const group = path.parse(__filename).name;
@@ -70,4 +71,14 @@ const ping: Command = {
   },
 };
 
-export default [help, ping];
+const despair: Command = {
+  name: 'despair',
+  group,
+  description: 'Gets current amount of despair.',
+  async execute(message) {
+    const despairAmount = await despairService.getDespairAmount();
+    return message.channel.send(despairAmount);
+  },
+};
+
+export default [help, ping, despair];
