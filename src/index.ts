@@ -37,7 +37,7 @@ client.once('ready', () => {
 });
 
 client.on('message', async (message: CustomMessage) => {
-  despairService.countAndIncrementDespair(message);
+  despairService.countAndIncrementDespair(message.content);
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return null;
   }
@@ -76,6 +76,10 @@ client.on('message', async (message: CustomMessage) => {
     return message.channel.send(':warning: | There was an error trying to execute that command!'
       + ` Debug Snowflake: ${message.id}`);
   }
+});
+
+client.on('messageReactionAdd', (reaction) => {
+  despairService.countAndIncrementDespair(reaction.emoji.name);
 });
 
 client.on('error', logger.error);

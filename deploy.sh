@@ -2,7 +2,7 @@
 
 set -o errexit
 
-cd /opt/bot-directory || { echo "No directory found"; exit 1; }
+cd /opt/despair-bot || { echo "No directory found"; exit 1; }
 
 git pull
 

@@ -1,3 +1,5 @@
 import * as Redis from 'ioredis';
 
-export const redis = new Redis();
+const redis = new Redis();
+redis.config('SET', 'notify-keyspace-events', 'KEA');
+export { redis };
