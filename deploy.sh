@@ -10,4 +10,4 @@ npm install
 
 npm run build
 
-pm2 reload all
+pm2 reload d-bot

@@ -12,7 +12,7 @@ class DespairService {
   countAndIncrementDespair(content: string): void {
     try {
       const despairAmount = (content.match(this.regexKey) || []).length;
-      redis.incrby(this.redisKey, despairAmount);
+      despairAmount && redis.incrby(this.redisKey, despairAmount);
     } catch (e) {
       logger.error('Cannot increment despair counter.', e);
     }
