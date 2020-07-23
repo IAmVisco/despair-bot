@@ -73,8 +73,7 @@ client.on('message', async (message: CustomMessage) => {
     return await command.execute(message, args);
   } catch (error) {
     logger.error(`Command error, Message Snowflake: ${message.id}`, error);
-    return message.channel.send(':warning: | There was an error trying to execute that command!'
-      + ` Debug Snowflake: ${message.id}`);
+    return null;
   }
 });
 
