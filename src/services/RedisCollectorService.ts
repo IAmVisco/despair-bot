@@ -3,9 +3,12 @@ import { redis } from '../helpers/redis';
 
 class RedisCollectorService {
   private readonly keywordsDictionary = {
-    despair: /(ayamedespair|ayamewhy)/ig,
-    pray: /(ayamepray|ayameblessing)/ig,
-    nakirium: /(ayamecry|o+jo{2,}u{2,})/ig,
+    despair: /(ayame_?despair|ayame_?why)/ig,
+    pray: /(ayame_?pray|ayame_?blessing)/ig,
+    nakirium: /(ayame_?cry|o+jo{2,}u{2,})/ig,
+    phone: /(ayame_?phone)/ig,
+    ayame: /(ayame|ojou)/ig,
+    poyoyo: /poyoyo/ig,
   };
 
   async getKeyValue(key: string): Promise<number> {
