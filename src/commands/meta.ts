@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as moment from 'moment-timezone';
 import { MessageEmbed } from 'discord.js';
-import { despairService } from '../services/DespairService';
+import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
 
 const group = path.parse(__filename).name;
@@ -76,7 +76,7 @@ const despair: Command = {
   group,
   description: 'Gets current amount of despair.',
   async execute(message) {
-    const despairAmount = await despairService.getDespairAmount();
+    const despairAmount = await redisCollectorService.getKeyValue('despair');
     return message.channel.send(despairAmount);
   },
 };

@@ -3,7 +3,7 @@ import * as Discord from 'discord.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { logger } from './helpers/logger';
-import { despairService } from './services/DespairService';
+import { redisCollectorService } from './services/RedisCollectorService';
 import { CustomClient, CustomMessage } from './types';
 
 dotenv.config();
@@ -37,7 +37,7 @@ client.once('ready', () => {
 });
 
 client.on('message', async (message: CustomMessage) => {
-  despairService.countAndIncrementDespair(message.content);
+  redisCollectorService.countKeywords(message.content);
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return null;
   }
@@ -78,7 +78,7 @@ client.on('message', async (message: CustomMessage) => {
 });
 
 client.on('messageReactionAdd', (reaction) => {
-  despairService.countAndIncrementDespair(reaction.emoji.name);
+  redisCollectorService.countKeywords(reaction.emoji.name);
 });
 
 client.on('error', logger.error);
