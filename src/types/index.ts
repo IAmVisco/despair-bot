@@ -15,9 +15,16 @@ export interface Command {
   group: string;
   args?: boolean;
   usage?: string;
-  aliases?: Array<string>;
+  aliases?: string[];
   description: string;
   hidden?: boolean;
   permissions?: PermissionResolvable;
   execute: (message: CustomMessage, args?: Array<string>) => Promise<CustomMessage | void>;
+}
+
+export interface StatsCommand {
+  name: string;
+  regex: RegExp;
+  description: string;
+  aliases?: string[];
 }

@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { BOT_VERSION } from './helpers/consts';
 import { logger } from './helpers/logger';
 import { redisCollectorService } from './services/RedisCollectorService';
 import { CustomClient, CustomMessage } from './types';
@@ -32,7 +33,7 @@ client.commands = new Discord.Collection();
 })();
 
 client.once('ready', () => {
-  logger.info('===== Despair Bot ready =====');
+  logger.info(`===== Despair Bot v${BOT_VERSION} ready =====`);
   logger.info(`Logged in as '${client.user?.tag}' (${client.user?.id})`);
   const usersAmount = client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
   logger.info(`Serving to ${usersAmount} users from ${client.guilds.cache.size} guilds`);

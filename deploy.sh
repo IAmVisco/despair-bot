@@ -10,4 +10,8 @@ npm install
 
 npm run build
 
+mv dist/src/* dist/
+
+rm -rf dist/src dist/package.json
+
 pm2 reload d-bot
