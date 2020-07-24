@@ -55,6 +55,7 @@ client.on('message', async (message: CustomMessage) => {
   }
 
   try {
+    redisCollectorService.incrementCommandCount();
     if (message.channel.type !== 'dm') {
       logger.info(`Executing command ${message.content} by @${message.author.tag} `
         + `in #${message.channel.name} (${message.channel.guild.name})`);

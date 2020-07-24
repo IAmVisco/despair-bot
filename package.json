@@ -1,9 +1,9 @@
 {
   "name": "despair-bot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "src/index.ts",
   "description": "Discord bot that counts level of despair in the world.",
-  "repository": "git@github.com:IAmVisco/despair-bot.git",
+  "repository": "https://github.com/IAmVisco/despair-bot",
   "scripts": {
     "build": "tsc",
     "start": "nodemon --exec \"ts-node\" src/index.ts",

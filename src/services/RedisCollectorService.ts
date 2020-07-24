@@ -18,6 +18,10 @@ class RedisCollectorService {
       logger.error('Cannot increment Redis counter', e);
     }
   }
+
+  incrementCommandCount(): Promise<number> {
+    return redis.incr('commands');
+  }
 }
 
 export const redisCollectorService = new RedisCollectorService();

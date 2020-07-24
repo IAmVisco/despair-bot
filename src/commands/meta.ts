@@ -1,9 +1,21 @@
 import * as path from 'path';
 import * as moment from 'moment-timezone';
 import { MessageEmbed } from 'discord.js';
+import { BOT_DESCRIPTION, BOT_VERSION, GITHUB_LINK } from '../helpers/consts';
+import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
 
 const group = path.parse(__filename).name;
+
+function getUptime(): string {
+  const uptime = moment.duration(process.uptime(), 'seconds');
+  const days = uptime.days() ? `${uptime.days()} days,` : '';
+  const hours = uptime.hours() ? `${uptime.hours()} hours,` : '';
+  const mins = uptime.minutes() ? `${uptime.minutes()} minutes,` : '';
+  const secs = uptime.seconds() > 1 ? `${uptime.seconds()} seconds` : `${uptime.seconds()} second`;
+
+  return `${days} ${hours} ${mins} ${secs}`;
+}
 
 const help: Command = {
   name: 'help',
@@ -33,7 +45,7 @@ const help: Command = {
     const embed = new MessageEmbed()
       .setTitle(`${user?.username} commands list`)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
-      .setDescription('Counts all the despairs in the world.')
+      .setDescription(BOT_DESCRIPTION)
       .setTimestamp();
     const prefix = process.env.BOT_PREFIX;
     Object.keys(orderedCommands).forEach((k) => {
@@ -80,4 +92,31 @@ const invite: Command = {
   },
 };
 
-export default [help, ping, invite];
+const info: Command = {
+  name: 'info',
+  aliases: ['about'],
+  group,
+  description: 'Prints bot info.',
+  async execute(message) {
+    const { user } = message.client;
+    const infoEmbed = new MessageEmbed()
+      .setAuthor(
+        `${user?.username} v${BOT_VERSION}`,
+        user?.avatarURL({ dynamic: true }) || '',
+        await message.client.generateInvite(),
+      )
+      .setTitle('Source code')
+      .setURL(GITHUB_LINK)
+      .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
+      .setDescription(BOT_DESCRIPTION)
+      .addField('Users known', `${message.client.users.cache.size}`, true)
+      .addField('Guilds known', `${message.client.guilds.cache.size}`, true)
+      .addField('Commands executed', `${await redisCollectorService.getKeyValue('commands')}`, true)
+      .setTimestamp()
+      .setFooter(getUptime());
+
+    return message.channel.send(infoEmbed);
+  },
+};
+
+export default [help, ping, invite, info];
