@@ -9,34 +9,34 @@ export const KEYWORDS: StatsCommand[] = [
   {
     name: 'despair',
     aliases: ['why'],
-    regex: /(ayame_?despair|ayame_?why)/ig,
+    regex: /(ayame_?despair|ayame_?why)/gi,
     description: 'Gets current amount of despair.',
   },
   {
     name: 'pray',
     aliases: ['bless'],
-    regex: /(ayame_?pray|ayame_?blessing)/ig,
+    regex: /(ayame_?pray|ayame_?blessing)/gi,
     description: 'Gets current amount of prayers.',
   },
   {
     name: 'nakirium',
-    regex: /(ayame_?cry|o+jo{2,}u{2,})/ig,
+    regex: /(ayame_?cry|o+jo{2,}u{2,})/gi,
     description: 'Gets current amount of refilled Nakirium.',
   },
   {
     name: 'phone',
-    regex: /(ayame_?phone)/ig,
+    regex: /(ayame_?phone)/gi,
     description: 'Gets current amount of phones, pointed at people.',
   },
   {
     name: 'ayame',
     aliases: ['ojou'],
-    regex: /(ayame|ojou)/ig,
+    regex: /(ayame|ojou)/gi,
     description: 'Gets current amount of Ojou mentions.',
   },
   {
     name: 'poyoyo',
-    regex: /poyoyo/ig,
+    regex: /poyoyo/gi,
     description: 'Gets current amount of Poyoyo mentions.',
   },
 ];
