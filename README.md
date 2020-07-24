@@ -1,20 +1,11 @@
-# discord.js Bot Template
-A Discord bot template to quickly get started with developing without a need to set up environment all over again.  
-
-## Features
-Tried to keep it rather simple:
-- 🐶 Set up ESLint with airbnb ruleset and git hooks
-- ⚡ Dynamic command importer
-- 😈 Nodemon and ts-node for high-octane developing
-- 📜 Ready-to-go winston logger
-- 🔧 discord.js types extensions and own types for safety and code completion
-- 📓 Auto-generating help with `help` command
-
-Includes few commands in `Meta` group:
-- `help` - Prints generated commands list.
-- `ping` - Checks Discord pings.
+# Despair Bot
+A Discord bot to count word matches in messages and emotes and store them in Redis.
+Done for English Nakirigumi Discord server since I was bored.  
+Server counterpart that serves changes, logged by this bot in real time
+with WebSockets can be found [here](https://github.com/IAmVisco/despair-server).
 
 ## Installation and usage
+Install Redis.  
 Copy `.env.example` into `.env` and set your bot token (acquired [here](https://discord.com/developers/applications)) and bot prefix.
 
 First of all pull npm packages:

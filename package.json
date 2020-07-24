@@ -1,6 +1,6 @@
 {
   "name": "despair-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/index.ts",
   "description": "Discord bot that counts level of despair in the world.",
   "repository": "git@github.com:IAmVisco/despair-bot.git",
