@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as moment from 'moment-timezone';
 import { MessageEmbed } from 'discord.js';
-import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
 
 const group = path.parse(__filename).name;
@@ -34,7 +33,7 @@ const help: Command = {
     const embed = new MessageEmbed()
       .setTitle(`${user?.username} commands list`)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
-      .setDescription('Uploads your stuff to Dropbox.')
+      .setDescription('Counts all the despairs in the world.')
       .setTimestamp();
     const prefix = process.env.BOT_PREFIX;
     Object.keys(orderedCommands).forEach((k) => {
@@ -71,14 +70,14 @@ const ping: Command = {
   },
 };
 
-const despair: Command = {
-  name: 'despair',
+const invite: Command = {
+  name: 'invite',
   group,
-  description: 'Gets current amount of despair.',
+  description: 'Retrieves bot invite.',
   async execute(message) {
-    const despairAmount = await redisCollectorService.getKeyValue('despair');
-    return message.channel.send(despairAmount);
+    // Returns old API link since lib is not updated it yet
+    return message.channel.send(`<${await message.client.generateInvite()}>`);
   },
 };
 
-export default [help, ping, despair];
+export default [help, ping, invite];
