@@ -108,7 +108,7 @@ const info: Command = {
       .setTitle('Source code')
       .setURL(GITHUB_LINK)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
-      .setDescription(BOT_DESCRIPTION)
+      .setDescription(`${BOT_DESCRIPTION}\nCheck out real time counter [here](https://ayamedespair.com).`)
       .addField('Users known', `${message.client.users.cache.size}`, true)
       .addField('Guilds known', `${message.client.guilds.cache.size}`, true)
       .addField('Commands executed', `${await redisCollectorService.getKeyValue('commands')}`, true)
