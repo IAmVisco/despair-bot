@@ -37,8 +37,7 @@ client.once('ready', () => {
   logger.info(`Logged in as '${client.user?.tag}' (${client.user?.id})`);
   const usersAmount = client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
   logger.info(`Serving to ${usersAmount} users from ${client.guilds.cache.size} guilds`);
-  // eslint-disable-next-line no-unused-expressions
-  client.user?.setActivity({ name: 'with Poyoyo', type: 'PLAYING' });
+  client.user?.setActivity({ name: `with Poyoyo | ${prefix}help`, type: 'PLAYING' });
 });
 
 client.on('message', async (message: CustomMessage) => {

@@ -11,7 +11,7 @@
     "import/extensions": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
-    "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
+    "no-unused-expressions": "off",
     "max-len": ["error", 120],
     "class-methods-use-this": "off",
     "lines-between-class-members": "off"
