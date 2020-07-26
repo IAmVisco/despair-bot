@@ -1,21 +1,11 @@
 import * as path from 'path';
 import * as moment from 'moment-timezone';
-import { MessageEmbed } from 'discord.js';
-import { BOT_DESCRIPTION, BOT_VERSION, GITHUB_LINK } from '../helpers/consts';
+import { BOT_DESCRIPTION, GITHUB_LINK } from '../helpers/consts';
+import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
 
 const group = path.parse(__filename).name;
-
-function getUptime(): string {
-  const uptime = moment.duration(process.uptime(), 'seconds');
-  const days = uptime.days() ? `${uptime.days()} days,` : '';
-  const hours = uptime.hours() ? `${uptime.hours()} hours,` : '';
-  const mins = uptime.minutes() ? `${uptime.minutes()} minutes,` : '';
-  const secs = uptime.seconds() > 1 ? `${uptime.seconds()} seconds` : `${uptime.seconds()} second`;
-
-  return `${days} ${hours} ${mins} ${secs}`;
-}
 
 const help: Command = {
   name: 'help',
@@ -42,11 +32,9 @@ const help: Command = {
         .sort((a, b) => (a.name > b.name ? 1 : -1));
     });
 
-    const embed = new MessageEmbed()
-      .setTitle(`${user?.username} commands list`)
+    const embed = embedFactory.getEmbedBase(user, `${user?.username} commands list`)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
-      .setDescription(BOT_DESCRIPTION)
-      .setTimestamp();
+      .setDescription(BOT_DESCRIPTION);
     const prefix = process.env.BOT_PREFIX;
     Object.keys(orderedCommands).forEach((k) => {
       if (orderedCommands[k].length) {
@@ -69,13 +57,14 @@ const ping: Command = {
   group,
   description: 'Ping!',
   async execute(message) {
-    const msg = await message.channel.send(new MessageEmbed().setTitle('Pong!').setColor('GREEN'));
+    const msg = await message.channel.send(embedFactory.getEmbedBase(message.client.user, 'Pong!').setColor('GREEN'));
     const pingTime = moment(msg.createdTimestamp).diff(moment(message.createdTimestamp));
-    const replyEmbed = new MessageEmbed()
-      .setTitle('Pong!')
+    const replyEmbed = embedFactory.getEmbedBase(message.client.user, 'Pong!')
+      .setDescription(
+        `:hourglass: Message ping: ${pingTime}ms\n`
+        + `:heartbeat: Websocket ping: ${message.client.ws.ping}ms`,
+      )
       .setColor('GREEN')
-      .setDescription(`:hourglass: Message ping: ${pingTime}ms`
-        + `\n:heartbeat: Websocket ping: ${message.client.ws.ping}ms`)
       .setTimestamp();
 
     return msg.edit(replyEmbed);
@@ -99,21 +88,17 @@ const info: Command = {
   description: 'Prints bot info.',
   async execute(message) {
     const { user } = message.client;
-    const infoEmbed = new MessageEmbed()
-      .setAuthor(
-        `${user?.username} v${BOT_VERSION}`,
-        user?.avatarURL({ dynamic: true }) || '',
-        await message.client.generateInvite(),
-      )
-      .setTitle('Source code')
+    const infoEmbed = embedFactory.getEmbedBase(user, 'Source code')
       .setURL(GITHUB_LINK)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
-      .setDescription(`${BOT_DESCRIPTION}\nCheck out real time counter [here](https://ayamedespair.com).`)
+      .setDescription(
+        `${BOT_DESCRIPTION}\n`
+        + 'Check out real time counter [here](https://ayamedespair.com).\n'
+        + `[Invite this bot to your server](${await message.client.generateInvite()}).`,
+      )
       .addField('Users known', `${message.client.users.cache.size}`, true)
       .addField('Guilds known', `${message.client.guilds.cache.size}`, true)
-      .addField('Commands executed', `${await redisCollectorService.getKeyValue('commands')}`, true)
-      .setTimestamp()
-      .setFooter(getUptime());
+      .addField('Commands executed', `${await redisCollectorService.getKeyValue('commands')}`, true);
 
     return message.channel.send(infoEmbed);
   },

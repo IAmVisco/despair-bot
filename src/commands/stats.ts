@@ -1,8 +1,8 @@
-import { MessageEmbed } from 'discord.js';
 import * as path from 'path';
+import { KEYWORDS } from '../helpers/consts';
+import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
-import { KEYWORDS } from '../helpers/consts';
 
 const group = path.parse(__filename).name;
 
@@ -41,11 +41,9 @@ const poyoArmy: Command = {
     }, []);
 
     if (usernames.length) {
-      const embed = new MessageEmbed()
-        .setTitle('Poyoyo army list')
+      const embed = embedFactory.getEmbedBase(message.client.user, 'Poyoyo army list')
         .setDescription('Full list of taken Poyoyo numbers.')
-        .addField('Numbers taken', usernames.join(', '))
-        .setTimestamp();
+        .addField('Numbers taken', usernames.join(', '));
 
       return message.channel.send(duplicates.length
         ? embed.addField('Duplicates', duplicates.join(', '))
