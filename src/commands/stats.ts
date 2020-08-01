@@ -43,6 +43,8 @@ const poyoArmy: Command = {
     if (usernames.length) {
       const embed = embedFactory.getEmbedBase(message.client.user, 'Poyoyo army list')
         .setDescription('Full list of taken Poyoyo numbers.')
+        .addField('Army size', usernames.length, true)
+        .addField('Heretics', message.guild.memberCount - usernames.length, true)
         .addField('Numbers taken', usernames.join(', '));
 
       return message.channel.send(duplicates.length
