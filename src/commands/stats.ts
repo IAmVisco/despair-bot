@@ -1,4 +1,6 @@
 import * as path from 'path';
+import * as moment from 'moment-timezone';
+import { redis } from '../helpers/redis';
 import { KEYWORDS } from '../helpers/consts';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
@@ -56,4 +58,23 @@ const poyoArmy: Command = {
   },
 };
 
-export default keywordCommands.concat([poyoArmy]);
+const context: Command = {
+  name: 'ctx',
+  group,
+  description: 'Resets context counter and shows time since last reset',
+  aliases: ['context'],
+  async execute(message, args) {
+    const lastReset = moment(await redis.get('context'));
+    const fromNow = moment().diff(lastReset);
+    const embed = embedFactory.getEmbedBase(message.client.user, 'Context timer')
+      .setDescription('Pass \'check\' as an argument to avoid reset.')
+      .addField('Time since last time context was mentioned', embedFactory.formatDuration(moment.duration(fromNow)));
+    if (!(args && args.pop() === 'check')) {
+      embed.setFooter('Counter reset!');
+      await redis.set('context', moment().toISOString());
+    }
+    return message.channel.send(embed);
+  },
+};
+
+export default keywordCommands.concat([poyoArmy, context]);
