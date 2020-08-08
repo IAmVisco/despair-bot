@@ -64,15 +64,26 @@ const context: Command = {
   description: 'Resets context counter and shows time since last reset',
   aliases: ['context'],
   async execute(message, args) {
+    let newBestSet = false;
     const lastReset = moment(await redis.get('context'));
-    const fromNow = moment().diff(lastReset);
-    const embed = embedFactory.getEmbedBase(message.client.user, 'Context timer')
-      .setDescription('Pass \'check\' as an argument to avoid reset.')
-      .addField('Time since last time context was mentioned', embedFactory.formatDuration(moment.duration(fromNow)));
-    if (!(args && args.pop() === 'check')) {
+    const bestResult = Number(await redis.get('context-best'));
+    const fromNow = moment.duration(moment().diff(lastReset));
+    const embed = embedFactory
+      .getEmbedBase(message.client.user, 'Context timer')
+      .addField('Time since last time context was mentioned', embedFactory.formatDuration(fromNow));
+    if (args && args.pop() === 'reset') {
       embed.setFooter('Counter reset!');
       await redis.set('context', moment().toISOString());
+      if (fromNow.asMilliseconds() > bestResult) {
+        newBestSet = true;
+        embed.setDescription('New best!').addField('Best result', embedFactory.formatDuration(fromNow));
+        await redis.set('context-best', fromNow.asMilliseconds());
+      }
+    } else {
+      embed.setDescription('Pass \'reset\' as an argument to reset the counter.');
     }
+    !newBestSet && embed.addField('Best result', embedFactory.formatDuration(moment.duration(bestResult)));
+
     return message.channel.send(embed);
   },
 };
