@@ -39,4 +39,9 @@ export const KEYWORDS: StatsCommand[] = [
     regex: /poyoyo/gi,
     description: 'Gets current amount of Poyoyo mentions.',
   },
+  {
+    name: 'zoom',
+    regex: /(ayame_?zoom)/gi,
+    description: 'Gets current amount of zoomed Ayames.',
+  },
 ];
