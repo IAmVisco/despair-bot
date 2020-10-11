@@ -1,7 +1,7 @@
-import * as path from 'path';
 import * as moment from 'moment-timezone';
-import { redis } from '../helpers/redis';
+import * as path from 'path';
 import { KEYWORDS } from '../helpers/consts';
+import { redis } from '../helpers/redis';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
 import { Command } from '../types';
@@ -47,7 +47,15 @@ const poyoArmy: Command = {
         .setDescription('Full list of taken Poyoyo numbers.')
         .addField('Army size', usernames.length, true)
         .addField('Heretics', message.guild.memberCount - usernames.length, true)
-        .addField('Numbers taken', usernames.join(', '));
+        .addField('How to join', 'Pick any number that is not listed below and change your nickname **on the server** according to the following format `Poyoyo<number> | <Your Nickname>`');
+
+      while (usernames.length) {
+        const namesChunk = [];
+        while (namesChunk.join(',').length <= 1000 && usernames.length) {
+          namesChunk.push(usernames.shift());
+        }
+        embed.addField('Numbers taken', namesChunk.join(','));
+      }
 
       return message.channel.send(duplicates.length
         ? embed.addField('Duplicates', duplicates.join(', '))

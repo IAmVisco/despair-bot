@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as moment from 'moment-timezone';
+import * as path from 'path';
 import { BOT_DESCRIPTION, GITHUB_LINK } from '../helpers/consts';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';

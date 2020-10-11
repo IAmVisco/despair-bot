@@ -12,7 +12,7 @@
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
     "no-unused-expressions": "off",
-    "max-len": ["error", 120],
+    "max-len": ["error", { "code": 120, "ignoreStrings": true }],
     "class-methods-use-this": "off",
     "lines-between-class-members": "off"
   },
