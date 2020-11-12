@@ -1,10 +1,11 @@
+import type { MessageEmbed } from 'discord.js';
 import * as moment from 'moment-timezone';
 import * as path from 'path';
 import { KEYWORDS } from '../helpers/consts';
 import { redis } from '../helpers/redis';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
-import { Command } from '../types';
+import { Command, CustomMessage } from '../types';
 
 const group = path.parse(__filename).name;
 
@@ -96,4 +97,47 @@ const context: Command = {
   },
 };
 
-export default keywordCommands.concat([poyoArmy, context]);
+const cancel: Command = {
+  name: 'cancel',
+  group,
+  description: 'Cancel someone',
+  aliases: ['cancels'],
+  async execute(message, args) {
+    const showList = async (msg: CustomMessage): Promise<MessageEmbed> => {
+      const embed = embedFactory.getEmbedBase(msg.client.user, 'Cancel list')
+        .setDescription(`Invoke the command like \`${process.env.BOT_PREFIX}cancel @<user>\` to cancel them!`);
+      const usersRange = await redis.zrevrange('cancels', 0, -1, 'WITHSCORES');
+      const chunks = 2;
+      const userChunks = Array(Math.ceil(usersRange.length / chunks))
+        .fill(null)
+        .map((_, i) => usersRange.slice(i * chunks, i * chunks + chunks));
+      embed.addField(
+        'Sorted list',
+        userChunks.map(([userId, cancelAmount]) => `<@${userId}> - ${cancelAmount}`).join('\n'),
+      );
+
+      return embed;
+    };
+
+    const cancelUser = async (msg: CustomMessage): Promise<MessageEmbed> => {
+      const embed = embedFactory.getEmbedBase(msg.client.user, 'User cancelled!');
+      const timesCancelled = await redis.zincrby('cancels', 1, message.mentions.users.first()!.id);
+      const firstTime = timesCancelled === '1';
+      embed.addField(
+        firstTime ? 'Congrats!' : 'Here we go again',
+        firstTime
+          ? "It's your first time getting cancelled!"
+          : `You've already been cancelled ${timesCancelled} times.`,
+      );
+
+      return embed;
+    };
+    const embed = (!args?.length || !message.mentions.users.size)
+      ? await showList(message)
+      : await cancelUser(message);
+
+    return message.channel.send(embed);
+  },
+};
+
+export default keywordCommands.concat([poyoArmy, context, cancel]);
