@@ -1,4 +1,6 @@
-import * as dotenv from 'dotenv';
+/* eslint-disable import/first */
+require('dotenv').config();
+
 import * as Discord from 'discord.js';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,7 +9,6 @@ import { logger } from './helpers/logger';
 import { redisCollectorService } from './services/RedisCollectorService';
 import { CustomClient, CustomMessage } from './types';
 
-dotenv.config();
 const client: CustomClient = new Discord.Client();
 const prefix = process.env.BOT_PREFIX ?? '!!';
 const commandFiles = fs.readdirSync(path.join(__dirname, 'commands'))

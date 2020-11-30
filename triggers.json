@@ -1,0 +1,40 @@
+[
+  {
+    "name": "despair",
+    "aliases": ["why"],
+    "regex": "(ayame_?despair|ayame_?why)",
+    "description": "Gets current amount of despair."
+  },
+  {
+    "name": "pray",
+    "aliases": ["bless"],
+    "regex": "(ayame_?pray|ayame_?blessing)",
+    "description": "Gets current amount of prayers."
+  },
+  {
+    "name": "nakirium",
+    "regex": "(ayame_?cry|o+jo{2,}u{2,})",
+    "description": "Gets current amount of refilled Nakirium."
+  },
+  {
+    "name": "phone",
+    "regex": "(ayame_?phone)",
+    "description": "Gets current amount of phones, pointed at people."
+  },
+  {
+    "name": "ayame",
+    "aliases": ["ojou"],
+    "regex": "(ayame|ojou)",
+    "description": "Gets current amount of Ojou mentions."
+  },
+  {
+    "name": "poyoyo",
+    "regex": "yoyo",
+    "description": "Gets current amount of Poyoyo mentions."
+  },
+  {
+    "name": "zoom",
+    "regex": "(ayame_?zoom)",
+    "description": "Gets current amount of zoomed Ayames."
+  }
+]

@@ -7,5 +7,5 @@ npm install
 rm -rf dist/
 npm run build
 mv dist/src/* dist/
-rm -rf dist/src dist/package.json
+rm -rf dist/src dist/package.json dist/triggers.json
 pm2 reload bot
