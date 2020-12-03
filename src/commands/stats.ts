@@ -20,6 +20,8 @@ const keywordCommands = KEYWORDS.map(({ name, description, aliases }): Command =
   },
 }));
 
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const poyoArmy: Command = {
   name: 'poyoarmy',
   group,
@@ -140,4 +142,4 @@ const cancel: Command = {
   },
 };
 
-export default keywordCommands.concat([poyoArmy, context, cancel]);
+export default keywordCommands.concat([context, cancel]);
