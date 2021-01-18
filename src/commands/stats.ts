@@ -115,7 +115,9 @@ const cancel: Command = {
         .map((_, i) => usersRange.slice(i * chunks, i * chunks + chunks));
       embed.addField(
         'Sorted list',
-        userChunks.map(([userId, cancelAmount]) => `<@${userId}> - ${cancelAmount}`).join('\n'),
+        userChunks
+          .filter(([, cancelAmount]) => +cancelAmount > 1)
+          .map(([userId, cancelAmount]) => `<@${userId}> - ${cancelAmount}`).join('\n'),
       );
 
       return embed;
