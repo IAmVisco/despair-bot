@@ -1,6 +1,6 @@
-import type { MessageEmbed } from 'discord.js';
 import * as moment from 'moment-timezone';
 import * as path from 'path';
+import type { MessageEmbed } from 'discord.js';
 import { KEYWORDS } from '../helpers/consts';
 import { redis } from '../helpers/redis';
 import { embedFactory } from '../services/EmbedFactoryService';
@@ -108,7 +108,7 @@ const cancel: Command = {
     const showList = async (msg: CustomMessage): Promise<MessageEmbed> => {
       const embed = embedFactory.getEmbedBase(msg.client.user, 'Cancel list')
         .setDescription(`Invoke the command like \`${process.env.BOT_PREFIX}cancel @<user>\` to cancel them!`);
-      const usersRange = await redis.zrevrange('cancels', 0, -1, 'WITHSCORES');
+      const usersRange = await redis.zrevrange('cancels', 0, 15, 'WITHSCORES');
       const chunks = 2;
       const userChunks = Array(Math.ceil(usersRange.length / chunks))
         .fill(null)

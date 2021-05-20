@@ -1,6 +1,4 @@
-/* eslint-disable import/first */
-require('dotenv').config();
-
+import 'dotenv/config';
 import * as Discord from 'discord.js';
 import * as fs from 'fs';
 import * as path from 'path';
