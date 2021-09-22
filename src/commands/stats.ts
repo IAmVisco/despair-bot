@@ -76,7 +76,7 @@ const ctx: Command = {
   aliases: ['context'],
   async execute(message, args) {
     let newBestSet = false;
-    const lastReset = moment(await redis.get('context'));
+    const lastReset = moment(await redis.get('context-reset'));
     const bestResult = Number(await redis.get('context-best'));
     const fromNow = moment.duration(moment().diff(lastReset));
     const embed = embedFactory
@@ -84,7 +84,7 @@ const ctx: Command = {
       .addField('Time since last time context was mentioned', embedFactory.formatDuration(fromNow));
     if (args && args.pop() === 'reset') {
       embed.setFooter('Counter reset!');
-      await redis.set('context', moment().toISOString());
+      await redis.set('context-reset', moment().toISOString());
       if (fromNow.asMilliseconds() > bestResult) {
         newBestSet = true;
         embed.setDescription('New best!').addField('Best result', embedFactory.formatDuration(fromNow));
@@ -104,10 +104,10 @@ const context: Command = {
   group,
   description: 'Pulls out context message',
   async execute(message) {
-    const calledTimes = await redis.incr('context');
+    const contextRequiredTimes = await redis.incr('context-help');
     const embed = embedFactory
       .getEmbedBase(message.client.user, 'Please, provide more context!')
-      .setFooter(`Context was required ${calledTimes} ${calledTimes === 1 ? 'time' : 'times'}`)
+      .setFooter(`Context was required ${contextRequiredTimes} ${contextRequiredTimes === 1 ? 'time' : 'times'}`)
       .setDescription(contextMessageBody);
 
     return message.channel.send(embed);
