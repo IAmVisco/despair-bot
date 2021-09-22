@@ -1,7 +1,7 @@
 import * as moment from 'moment-timezone';
 import * as path from 'path';
 import type { MessageEmbed } from 'discord.js';
-import { KEYWORDS } from '../helpers/consts';
+import { contextMessageBody, KEYWORDS } from '../helpers/consts';
 import { redis } from '../helpers/redis';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
@@ -69,7 +69,7 @@ const poyoArmy: Command = {
   },
 };
 
-const context: Command = {
+const ctx: Command = {
   name: 'ctx',
   group,
   description: 'Resets context counter and shows time since last reset',
@@ -99,10 +99,25 @@ const context: Command = {
   },
 };
 
+const context: Command = {
+  name: 'context',
+  group,
+  description: 'Pulls out context message',
+  async execute(message) {
+    const calledTimes = await redis.incr('context');
+    const embed = embedFactory
+      .getEmbedBase(message.client.user, 'Please, provide more context!')
+      .setFooter(`Context was required ${calledTimes} ${calledTimes === 1 ? 'time' : 'times'}`)
+      .setDescription(contextMessageBody);
+
+    return message.channel.send(embed);
+  },
+};
+
 const cancel: Command = {
   name: 'cancel',
   group,
-  description: 'Cancel someone',
+  description: 'Cancels someone',
   aliases: ['cancels'],
   async execute(message, args) {
     const showList = async (msg: CustomMessage): Promise<MessageEmbed> => {
@@ -144,4 +159,4 @@ const cancel: Command = {
   },
 };
 
-export default keywordCommands.concat([context, cancel]);
+export default keywordCommands.concat([ctx, context, cancel]);
