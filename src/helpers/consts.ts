@@ -19,3 +19,12 @@ export const contextMessageBody = `**When we say "please give context" we mean:*
   ・Do you have a link to the video or website where you encountered it? How about a screenshot? Audio clip?
 
 ***Please answer all of the above before proceeding.***`;
+
+export const dictionaryMessageBody = `
+Most "what does this word mean" questions can be answered with a dictionary! There are links to a couple below.
+If you checked a dictionary and still have questions, please be specific.
+What did you not understand? Do you need an example of how to use the word?
+In the meantime, try these dictionaries:
+・https://jisho.org/
+・https://takoboto.jp/
+`;

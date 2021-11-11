@@ -1,7 +1,7 @@
 import * as moment from 'moment-timezone';
 import * as path from 'path';
 import type { MessageEmbed } from 'discord.js';
-import { contextMessageBody, KEYWORDS } from '../helpers/consts';
+import { contextMessageBody, dictionaryMessageBody, KEYWORDS } from '../helpers/consts';
 import { redis } from '../helpers/redis';
 import { embedFactory } from '../services/EmbedFactoryService';
 import { redisCollectorService } from '../services/RedisCollectorService';
@@ -102,13 +102,29 @@ const ctx: Command = {
 const context: Command = {
   name: 'context',
   group,
-  description: 'Pulls out context message',
+  description: 'Pulls out "Provide more context!" message',
   async execute(message) {
     const contextRequiredTimes = await redis.incr('context-help');
     const embed = embedFactory
       .getEmbedBase(message.client.user, 'Please, provide more context!')
       .setFooter(`Context was required ${contextRequiredTimes} ${contextRequiredTimes === 1 ? 'time' : 'times'}`)
       .setDescription(contextMessageBody);
+
+    return message.channel.send(embed);
+  },
+};
+
+const dictionary: Command = {
+  name: 'dictionary',
+  group,
+  description: 'Pulls out "Have you tried checking a dictionary?" message',
+  aliases: ['dict', 'jisho'],
+  async execute(message) {
+    const dictionaryNotUsedTimes = await redis.incr('dict-help');
+    const embed = embedFactory
+      .getEmbedBase(message.client.user, 'Have you tried checking a dictionary first?')
+      .setFooter(`A dictionary was not used ${dictionaryNotUsedTimes} ${dictionaryNotUsedTimes === 1 ? 'time' : 'times'}`)
+      .setDescription(dictionaryMessageBody);
 
     return message.channel.send(embed);
   },
@@ -159,4 +175,4 @@ const cancel: Command = {
   },
 };
 
-export default keywordCommands.concat([ctx, context, cancel]);
+export default keywordCommands.concat([ctx, context, dictionary, cancel]);
