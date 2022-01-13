@@ -155,14 +155,14 @@ const cancel: Command = {
     };
 
     const cancelUser = async (msg: CustomMessage): Promise<MessageEmbed> => {
-      const embed = embedFactory.getEmbedBase(msg.client.user, 'User cancelled!');
-      const timesCancelled = await redis.zincrby('cancels', 1, message.mentions.users.first()!.id);
-      const firstTime = timesCancelled === '1';
+      const embed = embedFactory.getEmbedBase(msg.client.user, 'User canceled!');
+      const timesCanceled = await redis.zincrby('cancels', 1, message.mentions.users.first()!.id);
+      const firstTime = timesCanceled === '1';
       embed.addField(
         firstTime ? 'Congrats!' : 'Here we go again',
         firstTime
-          ? "It's your first time getting cancelled!"
-          : `You've already been cancelled ${timesCancelled} times.`,
+          ? "It's your first time getting canceled!"
+          : `You've already been canceled ${timesCanceled} times.`,
       );
 
       return embed;
