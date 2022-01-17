@@ -1,4 +1,4 @@
-name: Deploy backend
+name: Deploy bot
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
 
           cd /opt/despair-bot || { echo "No directory found"; exit 1; }
           git pull
-          npm install
+          npm ci
           rm -rf dist/
           npm run build
           mv dist/src/* dist/
