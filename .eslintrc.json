@@ -16,7 +16,8 @@
     "no-unused-expressions": "off",
     "max-len": ["error", { "code": 120, "ignoreStrings": true }],
     "class-methods-use-this": "off",
-    "lines-between-class-members": "off"
+    "lines-between-class-members": "off",
+    "operator-linebreak": "off"
   },
   "settings": {
     "import/resolver": {

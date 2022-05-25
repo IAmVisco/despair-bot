@@ -7,8 +7,11 @@ class RedisCollectorService {
     return parseInt(await redis.get(key) || '0', 10);
   }
 
-  countKeywords(content: string): void {
+  countKeywords(content: string | null): void {
     try {
+      if (!content) {
+        return;
+      }
       // eslint-disable-next-line no-restricted-syntax
       for (const { name, regex } of KEYWORDS) {
         const matchAmount = (content.match(regex) || []).length;

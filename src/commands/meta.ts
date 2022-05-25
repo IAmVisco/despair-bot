@@ -18,21 +18,22 @@ const help: Command = {
     const commands: { [key: string]: Array<Command> } = { uncategorized: [] };
     message.client.commands!.forEach((c) => {
       if (c.group) {
-        c.group in commands
-          ? commands[c.group].push(c)
-          : commands[c.group] = [c];
+        c.group in commands ? commands[c.group].push(c) : (commands[c.group] = [c]);
       } else {
         commands.uncategorized.push(c);
       }
     });
-    Object.keys(commands).sort().forEach((key) => {
-      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-      orderedCommands[capitalizedKey] = commands[key]
-        .filter((c) => !c.hidden)
-        .sort((a, b) => (a.name > b.name ? 1 : -1));
-    });
+    Object.keys(commands)
+      .sort()
+      .forEach((key) => {
+        const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+        orderedCommands[capitalizedKey] = commands[key]
+          .filter((c) => !c.hidden)
+          .sort((a, b) => (a.name > b.name ? 1 : -1));
+      });
 
-    const embed = embedFactory.getEmbedBase(user, `${user?.username} commands list`)
+    const embed = embedFactory
+      .getEmbedBase(user, `${user?.username} commands list`)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
       .setDescription(BOT_DESCRIPTION);
     const prefix = process.env.BOT_PREFIX;
@@ -40,15 +41,13 @@ const help: Command = {
       if (orderedCommands[k].length) {
         embed.addField('Group', `**${k}**`);
         orderedCommands[k].forEach((c) => {
-          const commandName = c.aliases
-            ? `${prefix}${c.name} [${c.aliases.join(', ')}]`
-            : `${prefix}${c.name}`;
+          const commandName = c.aliases ? `${prefix}${c.name} [${c.aliases.join(', ')}]` : `${prefix}${c.name}`;
           embed.addField(commandName, c.description, true);
         });
       }
     });
 
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
   },
 };
 
@@ -57,17 +56,19 @@ const ping: Command = {
   group,
   description: 'Ping!',
   async execute(message) {
-    const msg = await message.channel.send(embedFactory.getEmbedBase(message.client.user, 'Pong!').setColor('GREEN'));
+    const msg = await message.channel.send({
+      embeds: [embedFactory.getEmbedBase(message.client.user, 'Pong!').setColor('GREEN')],
+    });
     const pingTime = moment(msg.createdTimestamp).diff(moment(message.createdTimestamp));
-    const replyEmbed = embedFactory.getEmbedBase(message.client.user, 'Pong!')
+    const replyEmbed = embedFactory
+      .getEmbedBase(message.client.user, 'Pong!')
       .setDescription(
-        `:hourglass: Message ping: ${pingTime}ms\n`
-        + `:heartbeat: Websocket ping: ${message.client.ws.ping}ms`,
+        `:hourglass: Message ping: ${pingTime}ms\n:heartbeat: Websocket ping: ${message.client.ws.ping}ms`,
       )
       .setColor('GREEN')
       .setTimestamp();
 
-    return msg.edit(replyEmbed);
+    return msg.edit({ embeds: [replyEmbed] });
   },
 };
 
@@ -76,8 +77,8 @@ const invite: Command = {
   group,
   description: 'Retrieves bot invite.',
   async execute(message) {
-    // Returns old API link since lib is not updated it yet
-    return message.channel.send(`<${await message.client.generateInvite()}>`);
+    // Returns an old API link since lib is not updated it yet?
+    return message.channel.send(`<${message.client.generateInvite()}>`);
   },
 };
 
@@ -88,19 +89,20 @@ const info: Command = {
   description: 'Prints bot info.',
   async execute(message) {
     const { user } = message.client;
-    const infoEmbed = embedFactory.getEmbedBase(user, 'Source code')
+    const infoEmbed = embedFactory
+      .getEmbedBase(user, 'Source code')
       .setURL(GITHUB_LINK)
       .setThumbnail(user?.avatarURL({ dynamic: true }) || '')
       .setDescription(
-        `${BOT_DESCRIPTION}\n`
-        + 'Check out real time counter [here](https://ayamedespair.com).\n'
-        + `[Invite this bot to your server](${await message.client.generateInvite()}).`,
+        `${BOT_DESCRIPTION}\n` +
+          'Check out real time counter [here](https://ayamedespair.com).\n' +
+          `[Invite this bot to your server](${message.client.generateInvite()}).`,
       )
       .addField('Users known', `${message.client.users.cache.size}`, true)
       .addField('Guilds known', `${message.client.guilds.cache.size}`, true)
       .addField('Commands executed', `${await redisCollectorService.getKeyValue('commands')}`, true);
 
-    return message.channel.send(infoEmbed);
+    return message.channel.send({ embeds: [infoEmbed] });
   },
 };
 
